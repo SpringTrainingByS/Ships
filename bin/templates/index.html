@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html 
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8"/>
-	<title>Insert title here</title>
+	<title>Witamy w grze :)</title>
+	
+	<link rel="stylesheet" th:href="@{/css/main.css}"/>
+	<script th:src="@{/js/index.js}"></script>
+
 </head>
 <body>
-	<h1>Welcome in Ships Battle!!!!</h1>
+	<div class="container">
+		<h1>Welcome in Ships Battle!!!!</h1>
+		<div id="registration-section">
+			<h2>Rejestracja:</h2>
+			<div class="row">
+				<input type="text" id="login" placeholder="Podaj nazwę użytkownika"/>
+			</div>
+			<div class="row">
+				<label for="password1">Hasło:</label>
+				<input type="password" id="password1"/>
+			</div>
+			<div class="row">
+				<label for="password2">Powtórz hasło:</label>
+				<input type="password" id="password2"/>
+			</div>
+		</div>
+	</div>	
 </body>
 </html>
