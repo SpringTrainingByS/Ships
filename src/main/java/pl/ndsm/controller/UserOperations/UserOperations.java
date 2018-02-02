@@ -11,13 +11,15 @@ import pl.ndsm.model.userInfo.User;
 import pl.ndsm.service.UserService;
 
 @RestController
-public class Registration {
+@RequestMapping(value = "user")
+public class UserOperations {
 	
 	@Autowired
 	private UserService userService;
 	
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public void register(@RequestBody User user) throws ValidationException {
+		System.out.println(user.toString());
 		userService.add(user);
 	}
 }
