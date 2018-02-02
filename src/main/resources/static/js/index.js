@@ -1,3 +1,26 @@
+$(function () {
+	$( "#registration-section" ).hide();
+	$("#go-to-login").hide();
+	$( "#registration-button" ).click(async function() {
+		console.log("rejestracja");
+		await register();
+	});
+	
+	$("#go-to-login").bind("click", function() {
+		$( "#registration-section" ).hide();
+		$( "#login-section" ).show();
+		$("#go-to-login").hide();
+		$("#go-to-registration").show();
+	});
+	
+	$("#go-to-registration").bind("click", function() {
+		$( "#registration-section" ).show();
+		$( "#login-section" ).hide();
+		$("#go-to-login").show();
+		$("#go-to-registration").hide();
+	});
+});
+
 async function register() {
 	let login = $( "#login" ).val();
 	let password = $( "#password1" ).val();
@@ -27,6 +50,9 @@ async function register() {
 		console.log("udało się");
 		$( "#registration-section" ).hide();
 		$( "#login-section" ).show();
+		$( "#login-message" ).append("<p>" + "Rejestracja zakończna sukcesem. Teraz możesz się zalogować." + "</p>");
+		$("#go-to-login").hide();
+		$("#go-to-registration").show();
 	}
 	
 	function showRegistrationErrors(e) {
@@ -40,10 +66,3 @@ async function register() {
 	}
 }
 
-$(function () {
-	$( "#registration-section" ).hide();
-	$( "#registration-button" ).click(async function() {
-		console.log("rejestracja");
-		await register();
-	});
-});
