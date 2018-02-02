@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@Configuration
+//@Configuration
 public class ResourcesViewConf extends WebMvcConfigurerAdapter {
 
 	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
@@ -15,8 +15,5 @@ public class ResourcesViewConf extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
             .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
-        
-        //registry.addResourceHandler("/webjars/**")
-        	//.addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
