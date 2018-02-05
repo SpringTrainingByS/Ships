@@ -54,7 +54,7 @@ async function register() {
 		console.log("udało się");
 		$( "#registration-section" ).hide();
 		$( "#login-section" ).show();
-		$( "#login-message" ).append("<p>" + "Rejestracja zakończna sukcesem. Teraz możesz się zalogować." + "</p>");
+		$( "#login-message" ).append("<p>" + "Rejestracja zakończona sukcesem. Teraz możesz się zalogować." + "</p>");
 		$("#go-to-login").hide();
 		$("#go-to-registration").show();
 	}
@@ -102,6 +102,7 @@ async function login() {
 			let token = response.getResponseHeader("authorization");
 			console.log(token);
 			localStorage.setItem(TOKEN_ACCESS_NAME, token);
+			window.location.replace(SERVER_ADDRESS + "waiting-room");
 		}
 		else {
 			message = "Logowanie zakończone niepowodzeniem";
