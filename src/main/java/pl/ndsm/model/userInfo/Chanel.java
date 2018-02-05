@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Websocket {
+public class Chanel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,8 +20,15 @@ public class Websocket {
 	
 	private String name;
 
-	public Websocket() {
+	public Chanel() {
 		super();
+	}
+	
+
+	public Chanel(UserApp user, String name) {
+		super();
+		this.user = user;
+		this.name = name;
 	}
 
 	public long getId() {

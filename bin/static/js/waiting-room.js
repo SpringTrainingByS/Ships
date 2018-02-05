@@ -1,11 +1,18 @@
 console.log(localStorage.getItem(TOKEN_ACCESS_NAME));
 console.log(localStorage.getItem(USERNAME));
+
 if (localStorage.getItem(TOKEN_ACCESS_NAME) == null) {
 	window.location.replace(SERVER_ADDRESS);
 }
 else {
+	prepareCommunicationsElements();
 	showPage();
 }
+
+function prepareCommunicationsElements() {
+	
+}
+
 
 async function showPage() {
 	
@@ -29,4 +36,7 @@ async function showPage() {
 	
 }
 
+function obtainChanelsNames() {
+	
+}
 
