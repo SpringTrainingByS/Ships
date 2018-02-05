@@ -2,79 +2,74 @@ package pl.ndsm.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import pl.ndsm.model.userInfo.UserApp;
 
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@Service
+public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
-	private AuthenticationManager authenticationManager;
-	
-	public JWTAuthenticationFilter(AuthenticationManager auth) {
-		this.authenticationManager = auth;
-	}
-	
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException {
-		
-		System.out.println("JWTAuthentication.attemptAuthentication()");
-		
-		try {
-			
-			UserApp creds = new ObjectMapper()
-					.readValue(request.getInputStream(), UserApp.class);
-			
-			System.out.println("Credentials: " + creds.getUsername() + ", " + creds.getPassword());
-			
-			return authenticationManager.authenticate(
-						new UsernamePasswordAuthenticationToken(
-							creds.getUsername(),
-							creds.getPassword(),
-							new ArrayList<>()
-						)
-					);
-			
-		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
+	public JWTAuthenticationFilter(AuthenticationManager authManager) {
+		super(authManager);
 	}
 
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authResult) throws IOException, ServletException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 		
-		System.out.println("JWTAuthentication.successfulAuthentication()");
+		System.out.println("Dobra filtruje");
 		
-		String token = Jwts.builder()
-				.setSubject(((User) authResult.getPrincipal()).getUsername())
-				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET.getBytes())
-				.compact();
+		String header = request.getHeader(SecurityConstants.HEADER_STRING);
 		
-		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+		System.out.println("header token" + header);
+		
+		if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+			System.out.println("Token nie przeszed³ wymagañ.");
+			chain.doFilter(request, response);
+		}
+		else {
+			System.out.println("Tokenowi siê uda³o przejœæ");
+			UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+			
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			chain.doFilter(request, response);
+		}
+		
+	}
+	
+	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+		
+		String token = request.getHeader(SecurityConstants.HEADER_STRING);
+		
+		if (token != null) {
+			
+			String user = Jwts.parser()
+					.setSigningKey(SecurityConstants.SECRET.getBytes())
+					.parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+					.getBody()
+					.getSubject();
+			
+			System.out.println(user);
+			
+			if (user != null) {
+				return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+			}
+		} 
+		
+		return null;
+		
 	}
 	
 	
-
+	
 }

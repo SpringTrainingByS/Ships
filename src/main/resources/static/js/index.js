@@ -102,6 +102,10 @@ async function login() {
 			let token = response.getResponseHeader("authorization");
 			console.log(token);
 			localStorage.setItem(TOKEN_ACCESS_NAME, token);
+			
+			let username = $("#login-to-login").val();
+			localStorage.setItem(USERNAME, username);
+			
 			window.location.replace(SERVER_ADDRESS + "waiting-room");
 		}
 		else {
