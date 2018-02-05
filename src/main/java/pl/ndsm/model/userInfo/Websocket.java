@@ -16,7 +16,7 @@ public class Websocket {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private UserApp user;
 	
 	private String name;
 
@@ -32,11 +32,11 @@ public class Websocket {
 		this.id = id;
 	}
 
-	public User getUser() {
+	public UserApp getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserApp user) {
 		this.user = user;
 	}
 

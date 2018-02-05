@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import pl.ndsm.model.userInfo.User;
+import pl.ndsm.model.userInfo.UserApp;
 
 public class Match {
 
@@ -16,11 +16,11 @@ public class Match {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id_1")
-	private User user1;
+	private UserApp user1;
 	
 	@OneToOne
 	@JoinColumn(name = "user_id_2")
-	private User user2;
+	private UserApp user2;
 	
 	public Match() {
 		super();
@@ -34,19 +34,19 @@ public class Match {
 		this.id = id;
 	}
 
-	public User getUser1() {
+	public UserApp getUser1() {
 		return user1;
 	}
 
-	public void setUser1(User user1) {
+	public void setUser1(UserApp user1) {
 		this.user1 = user1;
 	}
 
-	public User getUser2() {
+	public UserApp getUser2() {
 		return user2;
 	}
 
-	public void setUser2(User user2) {
+	public void setUser2(UserApp user2) {
 		this.user2 = user2;
 	}
 	

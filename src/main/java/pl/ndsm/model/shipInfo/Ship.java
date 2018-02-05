@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import pl.ndsm.model.userInfo.User;
+import pl.ndsm.model.userInfo.UserApp;
 
 @Entity
 public class Ship {
@@ -23,7 +23,7 @@ public class Ship {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private UserApp user;
 	
 	@Column(name = "shot_count")
 	private int shotCount;
@@ -50,11 +50,11 @@ public class Ship {
 		this.stateOfShip = stateOfShip;
 	}
 
-	public User getUser() {
+	public UserApp getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserApp user) {
 		this.user = user;
 	}
 

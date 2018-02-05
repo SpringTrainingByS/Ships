@@ -6,22 +6,22 @@ import org.springframework.stereotype.Service;
 
 import pl.ndsm.dao.UserDao;
 import pl.ndsm.exception.ValidationException;
-import pl.ndsm.model.userInfo.User;
+import pl.ndsm.model.userInfo.UserApp;
 
 @Service
 public class UserValidator {
 	
 
-	public void validate(User user, UserDao dao) throws ValidationException {
+	public void validate(UserApp user, UserDao dao) throws ValidationException {
 		ArrayList<String> messages = new ArrayList<String>();
 		
 		if (user == null) {
 			messages.add("Brak danych");
 		}
-		else if (user.getLogin() == null) {
+		else if (user.getUsername() == null) {
 			messages.add("Brak loginu");
 		}
-		else if (user.getLogin() == null) {
+		else if (user.getPassword() == null) {
 			messages.add("Brak has³a");
 		}
 		
@@ -30,10 +30,10 @@ public class UserValidator {
 				messages.add("Niepoprawne id.");
 			}
 			
-			if (!user.getLogin().matches("^[a-zA-z0-9-_]+$")) {
+			if (!user.getUsername().matches("^[a-zA-z0-9-_]+$")) {
 				messages.add("Login nie jest zgodny z kryteriami.");
 			}
-			else if (dao.existsByLogin(user.getLogin())) {
+			else if (dao.existsByUsername(user.getUsername())) {
 				messages.add("Login u¿ytkownika istnieje ju¿ w bazie.");
 			}
 			
