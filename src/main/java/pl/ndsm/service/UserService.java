@@ -1,11 +1,14 @@
 package pl.ndsm.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import pl.ndsm.dao.UserDao;
 import pl.ndsm.dao.ChanelDao;
+import pl.ndsm.dao.UserDao;
 import pl.ndsm.exception.ValidationException;
 import pl.ndsm.model.userInfo.Chanel;
 import pl.ndsm.model.userInfo.UserApp;
@@ -32,6 +35,17 @@ public class UserService {
 		user.setPassword(passwordCrypted);
 		userDao.save(user);
 		addWebsocketForUser(user);
+	}
+	
+	public Long getIdByUsername(String username) throws ValidationException {
+		if (username == null || username.isEmpty()) {
+			List<String> message = new ArrayList<String>();
+			message.add("Podana nazwa u¿ytkownika jest pusta");
+			
+			throw new ValidationException(message);
+		}
+		
+		return userDao.findIdByUsername(username);
 	}
 	
 	public void addWebsocketForUser(UserApp user) {

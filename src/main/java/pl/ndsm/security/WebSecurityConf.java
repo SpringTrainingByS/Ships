@@ -28,13 +28,18 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeRequests()
 			.antMatchers("/", "/user/register", "/css/**","/login", "/js/**", "/webjars/**",
-					"/waiting-room")
+					"/waiting-room", "/socket/**")
 			.permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilterBefore(new JWTLoginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(new JWTAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		http
+			.headers()
+			.frameOptions()
+			.sameOrigin();
 	}
 
 	@Override
