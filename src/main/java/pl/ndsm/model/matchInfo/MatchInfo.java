@@ -1,5 +1,6 @@
 package pl.ndsm.model.matchInfo;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,7 +9,8 @@ import javax.persistence.OneToOne;
 
 import pl.ndsm.model.userInfo.UserApp;
 
-public class Match {
+@Entity
+public class MatchInfo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,7 +24,7 @@ public class Match {
 	@JoinColumn(name = "user_id_2")
 	private UserApp user2;
 	
-	public Match() {
+	public MatchInfo() {
 		super();
 	}
 
