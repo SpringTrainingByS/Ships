@@ -1,0 +1,3 @@
+var SHIP_DEFINITION = [{
+	
+}]
