@@ -11,6 +11,7 @@ import pl.ndsm.model.userInfo.UserApp;
 public interface UserDao extends CrudRepository<UserApp, Long> {
 	public boolean existsByUsername(String login);
 	public UserApp findByUsername(String username);
+	public UserApp findById(long id);
 	public UserApp save(UserApp user);
 	
 	@Query(value = "SELECT id FROM user_app WHERE username = :username", nativeQuery = true)

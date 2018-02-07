@@ -1,5 +1,6 @@
 package pl.ndsm.model.shipInfo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ public class Ship {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "state_of_ship_id")
 	private StateOfShip stateOfShip;
 	
@@ -73,5 +74,13 @@ public class Ship {
 	public void setSize(int size) {
 		this.size = size;
 	}
+
+	@Override
+	public String toString() {
+		return "Ship [id=" + id + ", stateOfShip=" + stateOfShip + ", user=" + user + ", shotCount=" + shotCount
+				+ ", size=" + size + "]";
+	}
+	
+	
 	
 }

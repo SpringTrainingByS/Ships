@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.ndsm.exception.ValidationException;
 import pl.ndsm.service.WaitingForMatchSerivce;
 
-@RestController
+//@RestController
 @RequestMapping(value = "/waiting-for-match")
 public class WaitingForMatchController {
 	

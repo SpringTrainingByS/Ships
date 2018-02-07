@@ -2,6 +2,8 @@ package pl.ndsm.model.shipInfo.fieldLocation;
 
 public class ShipContainer {
 	
+	private long userId;
+	
 	private ShipSize2 shipSize2;
 	
 	private ShipSize3 shipSize3p1;
@@ -13,6 +15,14 @@ public class ShipContainer {
 
 	public ShipContainer() {
 		super();
+	}
+	
+	public long getUserId() {
+		return userId;
+	}
+	
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public ShipSize2 getShipSize2() {
@@ -53,6 +63,12 @@ public class ShipContainer {
 
 	public void setShipSize5(ShipSize5 shipSize5) {
 		this.shipSize5 = shipSize5;
+	}
+
+	@Override
+	public String toString() {
+		return "ShipContainer [userId=" + userId + ", shipSize2=" + shipSize2 + ", shipSize3p1=" + shipSize3p1
+				+ ", shipSize3p2=" + shipSize3p2 + ", shipSize4=" + shipSize4 + ", shipSize5=" + shipSize5 + "]";
 	}
 	
 	

@@ -15,7 +15,6 @@ async function  preparePageAndLogic() {
 		await obtainUserChanelName();
 		userChanelName = localStorage.getItem(USER_CHANEL_NAME);
 		await connectWithChanels();
-		putUserToWaitingList();
 	}
 }
 
@@ -23,6 +22,10 @@ async function showPage() {
 	
 	$( "#clear-local-storage" ).click(async function() {
 		localStorage.clear();
+	});
+	
+	$( "#send-ships-to-server" ).click(async function() {
+		sendShipDefinitionContainer();
 	});
 	
 }
@@ -44,23 +47,6 @@ async function connectWithChanels() {
 		});
 	}, function () { console.log("nie udało się połączyć z kanałami"); });
 	
-}
-
-async function putUserToWaitingList() {
-	let url = SERVER_ADDRESS + "waiting-for-match"
-	await $.ajax({
-		url:url,
-		type:"GET",
-		data: { user_id : localStorage.getItem(USER_ID)},
-		headers: {"Authorization" : localStorage.getItem(TOKEN_ACCESS_NAME)},
-		contentType:"application/json; charset=utf-8"
-	})
-	.then(function(response) {
-		console.log("udało się dodać użytkowników do listy oczekujących");
-	}
-	, function(e) {
-		console.log("nie udało się dodać użytkownika do listy oczekujących");
-	});
 }
 
 async function obtainUserId() {
@@ -110,6 +96,23 @@ async function obtainUserChanelName() {
 		console.log("nie udało się pobrać informacji o kanale specjalnym dla użytkownika.");
 	});
 }
+
+async function sendShipDefinitionContainer() {
+	
+	console.log("Wysyłam statki na serwer.");
+	
+	SHIP_DEFINITION.userId = localStorage.getItem(USER_ID);
+	
+	let url = SERVER_ADDRESS + "ships/definition"
+	await $.ajax({
+		url:url,
+		type:"POST",
+		data: JSON.stringify(SHIP_DEFINITION),
+		headers: {"Authorization" : localStorage.getItem(TOKEN_ACCESS_NAME)},
+		contentType:"application/json; charset=utf-8"
+	});
+}
+
 
 
 

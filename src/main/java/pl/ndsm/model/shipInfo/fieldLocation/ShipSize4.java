@@ -1,5 +1,6 @@
 package pl.ndsm.model.shipInfo.fieldLocation;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class ShipSize4 {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ship_id")
 	private Ship ship;
 	
@@ -80,6 +81,12 @@ public class ShipSize4 {
 
 	public void setField4(String field4) {
 		this.field4 = field4;
+	}
+
+	@Override
+	public String toString() {
+		return "ShipSize4 [id=" + id + ", ship=" + ship + ", field1=" + field1 + ", field2=" + field2 + ", field3="
+				+ field3 + ", field4=" + field4 + "]";
 	}
 	
 	

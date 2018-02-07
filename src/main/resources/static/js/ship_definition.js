@@ -1,4 +1,5 @@
 var SHIP_DEFINITION = {
+	userId: 0,	
 	shipSize2: {
 		id: '',
 		ship: {
