@@ -15,10 +15,11 @@ async function  preparePageAndLogic() {
 	}
 	else {
 		showPage();
-		loadShipDefinition();
 		userChanelName = localStorage.getItem(USER_CHANEL_NAME);
-		await connectWithChanels();
-
+		connectWithChanels();
+		await loadShipDefinition();	
+		loadOwnShipSection();
+		loadEnemyShipSection();
 	}
 }
 
@@ -58,6 +59,86 @@ async function connectWithChanels() {
 	
 }
 
+function loadOwnShipSection() {
+	
+	let row = document.createElement("div"); 
+	let span = document.createElement('span');
+	row.setAttribute('class', 'row');
+	span.setAttribute('class', 'col-lp');
+	row.appendChild(span);
+	
+	for (i = 1; i <= 10; i++) {
+		let span = document.createElement('span');
+		span.setAttribute('class', 'col-lp');
+		span.innerHTML = i;
+		row.appendChild(span);
+	}
+	$("#own-ship-section-table").append(row);
+	
+	for (i = 1; i <= 10; i++) {
+		let row = document.createElement("div");
+		row.setAttribute('class', 'row');
+		for (j = 0; j <= 10; j++) {
+			let span = document.createElement('span');
+			
+			if (j == 0) {
+				span.setAttribute('class', 'col-lp');
+				span.innerHTML = i;
+			}
+			else {
+				span.setAttribute('class', 'col-ship');
+				span.innerHTML = "P";
+				span.setAttribute('id', 'own-pos' + i + j);
+				span.setAttribute('title', "pos: " + i + j);
+				span.style.outline = "1px solid black";
+			}
+			
+			row.appendChild(span);
+		}
+		$("#own-ship-section-table").append(row);
+	}
+}
+
+function loadEnemyShipSection() {
+	
+	let row = document.createElement("div"); 
+	let span = document.createElement('span');
+	row.setAttribute('class', 'row');
+	span.setAttribute('class', 'col-lp');
+	row.appendChild(span);
+	
+	for (i = 1; i <= 10; i++) {
+		let span = document.createElement('span');
+		span.setAttribute('class', 'col-lp');
+		span.innerHTML = i;
+		row.appendChild(span);
+	}
+	$("#enemy-ship-section-table").append(row);
+	
+	for (i = 1; i <= 10; i++) {
+		let row = document.createElement("div");
+		row.setAttribute('class', 'row');
+		for (j = 0; j <= 10; j++) {
+			let span = document.createElement('span');
+			
+			if (j == 0) {
+				span.setAttribute('class', 'col-lp');
+				span.innerHTML = i;
+			}
+			else {
+				span.setAttribute('class', 'col-ship');
+				span.innerHTML = "P";
+				span.setAttribute('id', 'own-pos' + i + j);
+				span.setAttribute('title', "pos: " + i + j);
+				span.style.outline = "1px solid black";
+			}
+			
+			row.appendChild(span);
+		}
+		$("#enemy-ship-section-table").append(row);
+	}
+	
+}
 
 function doProperActionForUserChanel(message) {
 	let result = JSON.parse(message.body);

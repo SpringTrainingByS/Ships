@@ -1,1 +1,12 @@
+.col-ship {
+	color: white;
+}
 
+.col-lp {
+	color: black;
+}
+
+.col-lp, .col-ship {
+	width: 9%;
+	text-align: center;
+}
