@@ -17,14 +17,14 @@ async function  preparePageAndLogic() {
 		showPage();
 		userChanelName = localStorage.getItem(USER_CHANEL_NAME);
 		connectWithChanels();
-		await loadShipDefinition();	
-		loadOwnShipSection();
-		loadEnemyShipSection();
 	}
 }
 
 async function showPage() {
-	
+	await loadShipDefinition();	
+	await loadOwnShipSection();
+	putShipsToOwnShipSection();
+	loadEnemyShipSection();
 }
 
 
@@ -59,7 +59,7 @@ async function connectWithChanels() {
 	
 }
 
-function loadOwnShipSection() {
+async function loadOwnShipSection() {
 	
 	let row = document.createElement("div"); 
 	let span = document.createElement('span');
@@ -87,7 +87,7 @@ function loadOwnShipSection() {
 			}
 			else {
 				span.setAttribute('class', 'col-ship');
-				span.innerHTML = "P";
+				span.innerHTML = " ";
 				span.setAttribute('id', 'own-pos' + i + j);
 				span.setAttribute('title', "pos: " + i + j);
 				span.style.outline = "1px solid black";
@@ -99,7 +99,7 @@ function loadOwnShipSection() {
 	}
 }
 
-function loadEnemyShipSection() {
+async function loadEnemyShipSection() {
 	
 	let row = document.createElement("div"); 
 	let span = document.createElement('span');
@@ -127,8 +127,8 @@ function loadEnemyShipSection() {
 			}
 			else {
 				span.setAttribute('class', 'col-ship');
-				span.innerHTML = "P";
-				span.setAttribute('id', 'own-pos' + i + j);
+				span.innerHTML = " ";
+				span.setAttribute('id', 'enemy-pos' + i + j);
 				span.setAttribute('title', "pos: " + i + j);
 				span.style.outline = "1px solid black";
 			}
@@ -139,6 +139,55 @@ function loadEnemyShipSection() {
 	}
 	
 }
+
+var points = [];
+
+async function putShipsToOwnShipSection() {
+	
+	prepareOwnShipsLocalization();
+	addOwnShipsLocalizationToView();
+	
+	console.log(points);
+}
+
+function prepareOwnShipsLocalization() {
+	for (x in shipDefinition) {
+		if (shipDefinition[x] instanceof Array || shipDefinition[x] instanceof Object) {
+			//console.log(shipDefinition[x]);
+			findFieldLocalization(shipDefinition[x], x) 
+		}
+		else {
+			//console.log(shipDefinition[x]);
+			if (x.includes("field")) {
+				points.push(shipDefinition[x]);
+			}
+		}
+	}
+}
+
+function addOwnShipsLocalizationToView() {
+	for (x of points) {
+		let fieldId = "own-pos" + x;
+		console.log(fieldId);
+		$("#" + "own-pos" + x).get(0).style.backgroundColor = "green";
+	}
+}
+
+function findFieldLocalization(field, fieldName) {
+	
+	for (x in field) {
+		if (field[x] instanceof Array || field[x] instanceof Object) {
+			//console.log(field[x]);
+			findFieldLocalization(field[x], x);
+		}
+		else {
+			if (x.includes("field")) {
+				console.log(field[x]);
+				points.push(field[x]);
+			}
+		}
+	}
+} 
 
 function doProperActionForUserChanel(message) {
 	let result = JSON.parse(message.body);

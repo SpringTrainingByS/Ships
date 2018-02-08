@@ -42,6 +42,9 @@ async function loadShipDefinition() {
 	if (localStorage.getItem(SHIP_CONTAINER) != null) {
 		SHIP_DEFINITION = JSON.parse(localStorage.getItem(SHIP_CONTAINER));
 	}
+	else {
+		localStorage.setItem(SHIP_CONTAINER, JSON.stringify(SHIP_DEFINITION));
+	}
 }
 
 async function obtainUserId() {
@@ -147,7 +150,7 @@ async function sendShipDefinitionContainer() {
 	
 	console.log("Wysyłam statki na serwer.");
 	
-	localStorage.addItem(SHIP_CONTAINER, JSON.stringify(SHIP_DEFINITION));
+	localStorage.setItem(SHIP_CONTAINER, JSON.stringify(SHIP_DEFINITION));
 	
 	SHIP_DEFINITION.userId = localStorage.getItem(USER_ID);
 	

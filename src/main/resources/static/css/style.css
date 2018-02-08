@@ -9,4 +9,18 @@
 .col-lp, .col-ship {
 	width: 9%;
 	text-align: center;
+	cursor: pointer;
+}
+
+#game-messages {
+	overflow: scroll;
+}
+
+.row.is-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.is-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
 }
