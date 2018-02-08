@@ -51,6 +51,7 @@ server.port = 8081 // U mnie na tym porcie na słuchuje co innego
 // Te cztery zmienne głownie Cię interesują
 
 spring.datasource.url = jdbc:mysql://localhost:3306/ships_db // adresy do bazy (PORT: 3306, domyślnie dla workbencha)
+// ships_db nazwa bazy
 spring.datasource.username = twój_login
 spring.datasource.password = twoje_hasło
 
