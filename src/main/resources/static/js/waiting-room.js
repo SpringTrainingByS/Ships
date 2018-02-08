@@ -4,6 +4,8 @@ console.log(JSON.stringify(SHIP_DEFINITION));
 
 var userChanelName = "";
 
+var stompClient;
+
 preparePageAndLogic(); 
 
 async function  preparePageAndLogic() {
@@ -30,6 +32,8 @@ async function showPage() {
 	$( "#send-ships-to-server" ).click(async function() {
 		sendShipDefinitionContainer();
 	});
+	
+	$(" #moving-to-game-room-message ").hide();
 	
 }
 
@@ -65,6 +69,10 @@ async function obtainUserId() {
 
 async function obtainUserChanelName() {
 	
+	if (localStorage.getItem(USER_CHANEL_NAME) != null) {
+		return;
+	}
+	
 	if (localStorage.getItem(USER_ID) == null) {
 		return;
 	}
@@ -96,12 +104,14 @@ async function connectWithChanels() {
 	var headers = {};
 	headers["Authorization"] = localStorage.getItem(TOKEN_ACCESS_NAME);
 	
+	console.log("$" + USER_CHANEL_PREFIX + userChanelName + "$");
+	
 	stompClient.connect(headers, function (frame) {
-		stompClient.subscribe(USER_CHANEL_PREFIX + userChanelName, function (message) {
-			doProperActionForUserChanel(message);
-		});
 		stompClient.subscribe(MAIN_CHANEL_NAME, function (message) {
 			changeFirst10View(message);
+		});
+		stompClient.subscribe(USER_CHANEL_PREFIX + userChanelName, function (message) {
+			doProperActionForUserChanel(message);
 		});
 	}, function () { console.log("nie udało się połączyć z kanałami"); });
 	
@@ -152,15 +162,20 @@ async function sendShipDefinitionContainer() {
 }
 
 function doProperActionForUserChanel(message) {
+	let result = JSON.parse(message.body);
+	let operationCode = parseInt(result.content);
 	
+	switch (operationCode) {
+		case USER_CHANEL_WR_CODES.MOVE_TO_GAME:
+			moveUserToGameRoom();
+		break;
+	} 
 }
 
 function changeFirst10View(response) {
 	
 	console.log(response);
 	let result = JSON.parse(response.body);
-	console.log("result content Jestem zajebisty")
-	console.log(result.content)
 	
 	let finalResult = JSON.parse(result.content);
 	console.log("finalResult: ");
@@ -171,6 +186,15 @@ function changeFirst10View(response) {
 		
 		$( "#actual-matches" ).append("<p>" + x.matchInfo + "<p>");
 	}
+}
+
+function moveUserToGameRoom() {
+	stompClient.disconnect();
+	$(" #moving-to-game-room-message ").show();
+	setTimeout(function() {
+		window.location.replace(SERVER_ADDRESS + "game-room");
+	}, 2000); 
+	
 }
 
 

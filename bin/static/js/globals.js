@@ -12,7 +12,6 @@ var SHIP_CONTAINER = "ship-container";
 
 var userChanel;
 
-var stompClient;
 
 var USER_CHANEL_WR_CODES = {
 	MOVE_TO_GAME: 0 	

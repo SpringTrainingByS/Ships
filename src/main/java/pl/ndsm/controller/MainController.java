@@ -15,5 +15,10 @@ public class MainController {
 	public String loadWaitingRoomPage() {
 		return "waiting-room";
 	}
+	
+	@RequestMapping(value = "/game-room")
+	public String loadGameRoomPage() {
+		return "game-room";
+	}
 
 }
