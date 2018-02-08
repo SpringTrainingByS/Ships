@@ -7,6 +7,8 @@ var userChanelName = "";
 
 var stompClient;
 
+var isUserTurn = 0;
+
 preparePageAndLogic(); 
 
 async function  preparePageAndLogic() {
@@ -49,9 +51,6 @@ async function connectWithChanels() {
 	console.log("$" + USER_CHANEL_PREFIX + userChanelName + "$");
 	
 	stompClient.connect(headers, function (frame) {
-		stompClient.subscribe(MAIN_CHANEL_NAME, function (message) {
-			changeFirst10View(message);
-		});
 		stompClient.subscribe(USER_CHANEL_PREFIX + userChanelName, function (message) {
 			doProperActionForUserChanel(message);
 		});
@@ -131,6 +130,9 @@ async function loadEnemyShipSection() {
 				span.setAttribute('id', 'enemy-pos' + i + j);
 				span.setAttribute('title', "pos: " + i + j);
 				span.style.outline = "1px solid black";
+				$(span).click(function() {
+					shotEnemyShip($(this).attr('id'));
+				});
 			}
 			
 			row.appendChild(span);
@@ -138,6 +140,15 @@ async function loadEnemyShipSection() {
 		$("#enemy-ship-section-table").append(row);
 	}
 	
+}
+
+
+async function shotEnemyShip(fieldId) {
+	if (isUserTurn == 1) {
+		let pos = fieldId.replace("enemy-pos", "");
+		console.log("Wysłana pozycja: " + pos);
+		
+	}
 }
 
 var points = [];
@@ -153,11 +164,9 @@ async function putShipsToOwnShipSection() {
 function prepareOwnShipsLocalization() {
 	for (x in shipDefinition) {
 		if (shipDefinition[x] instanceof Array || shipDefinition[x] instanceof Object) {
-			//console.log(shipDefinition[x]);
 			findFieldLocalization(shipDefinition[x], x) 
 		}
 		else {
-			//console.log(shipDefinition[x]);
 			if (x.includes("field")) {
 				points.push(shipDefinition[x]);
 			}
@@ -177,7 +186,6 @@ function findFieldLocalization(field, fieldName) {
 	
 	for (x in field) {
 		if (field[x] instanceof Array || field[x] instanceof Object) {
-			//console.log(field[x]);
 			findFieldLocalization(field[x], x);
 		}
 		else {

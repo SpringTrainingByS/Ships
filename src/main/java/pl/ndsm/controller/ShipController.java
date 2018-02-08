@@ -21,9 +21,10 @@ public class ShipController {
 	private WaitingForMatchSerivce  waitingForMatchService;
 	
 	@RequestMapping(value = "definition", method = RequestMethod.POST)
-	public void add(@RequestBody ShipContainer shipContainer) throws Exception {
+	public boolean add(@RequestBody ShipContainer shipContainer) throws Exception {
 		shipService.addShip(shipContainer);
 		waitingForMatchService.add(shipContainer.getUserId());
+		return waitingForMatchService.isOnlyOne();
 	}
 	
 }

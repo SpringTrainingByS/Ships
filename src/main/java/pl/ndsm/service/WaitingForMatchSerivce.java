@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import pl.ndsm.dao.WaitingForMatchDao;
 import pl.ndsm.exception.ValidationException;
-import pl.ndsm.model.matchInfo.WaitingForMatch;
 
 @Service
 public class WaitingForMatchSerivce {
@@ -26,6 +25,17 @@ public class WaitingForMatchSerivce {
 		//WaitingForMatch waitingForMatch = new WaitingForMatch(userId);
 		
 		waitingDao.saveUserId(userId);
+	}
+	
+	public boolean isOnlyOne() {
+		
+		boolean isOnlyOne = false;
+		long numberOfWaiting = waitingDao.count();
+		if (numberOfWaiting == 1) {
+			isOnlyOne = true;
+		}
+		
+		return isOnlyOne;
 	}
 	
 }

@@ -34,6 +34,7 @@ async function showPage() {
 	});
 	
 	$(" #moving-to-game-room-message ").hide();
+	$("#alone-message").hide();
 	
 }
 
@@ -161,6 +162,16 @@ async function sendShipDefinitionContainer() {
 		data: JSON.stringify(SHIP_DEFINITION),
 		headers: {"Authorization" : localStorage.getItem(TOKEN_ACCESS_NAME)},
 		contentType:"application/json; charset=utf-8"
+	})
+	.then(function(response) {
+		console.log(response);
+		if (response == true) {
+			console.log("Ustawiam widok na widoczny");
+			$("#alone-message").show();
+		}
+	}
+	, function(e) {
+		console.log("NIe udało się wysłać statków na serwer");
 	});
 }
 
@@ -193,7 +204,7 @@ function changeFirst10View(response) {
 
 function moveUserToGameRoom() {
 	stompClient.disconnect();
-	$(" #moving-to-game-room-message ").show();
+	$("#moving-to-game-room-message").show();
 	setTimeout(function() {
 		window.location.replace(SERVER_ADDRESS + "game-room");
 	}, 2000); 
