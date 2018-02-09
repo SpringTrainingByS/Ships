@@ -14,8 +14,7 @@ var userChanel;
 
 
 var USER_CHANEL_WR_CODES = {
-	MOVE_TO_GAME: 0,
-	ALONE_INFO: 1
+	MOVE_TO_GAME: 0
 };
 
 var USER_CHANEL_GR_CODES = {

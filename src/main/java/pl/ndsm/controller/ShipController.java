@@ -23,8 +23,9 @@ public class ShipController {
 	@RequestMapping(value = "definition", method = RequestMethod.POST)
 	public boolean add(@RequestBody ShipContainer shipContainer) throws Exception {
 		shipService.addShip(shipContainer);
+		boolean isAlone = waitingForMatchService.isUserOnWaitingListAlone();
 		waitingForMatchService.add(shipContainer.getUserId());
-		return waitingForMatchService.isOnlyOne();
+		return isAlone;
 	}
 	
 }

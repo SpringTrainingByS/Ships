@@ -15,27 +15,33 @@ public class WaitingForMatchSerivce {
 	@Autowired
 	private WaitingForMatchDao waitingDao;
 	
+	@Autowired
+	private MatchService matchService;
+	
 	public void add(long userId) throws ValidationException {
 		if ( userId == 0) {
 			List<String> message = new ArrayList<String>();
 			message.add("Nie poprawne id u¿ytkownika");
 			throw new ValidationException(message);
 		}
-		
-		//WaitingForMatch waitingForMatch = new WaitingForMatch(userId);
-		
-		waitingDao.saveUserId(userId);
+			
+		if (isUserOnWaitingListAlone()) {
+			waitingDao.saveUserId(userId);
+		}
+		else {
+			matchService.startGame(userId);
+		}
 	}
 	
-	public boolean isOnlyOne() {
+	public boolean isUserOnWaitingListAlone() {
 		
-		boolean isOnlyOne = false;
+		boolean isAlone = false;
 		long numberOfWaiting = waitingDao.count();
-		if (numberOfWaiting == 1) {
-			isOnlyOne = true;
+		if (numberOfWaiting == 0) {
+			isAlone = true;
 		}
 		
-		return isOnlyOne;
+		return isAlone;
 	}
 	
 }
