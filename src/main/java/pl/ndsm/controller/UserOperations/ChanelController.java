@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pl.ndsm.exception.ValidationException;
-import pl.ndsm.service.ChanelService;
+import pl.ndsm.service.comunicaiton.ChanelService;
 
 @RestController
 @RequestMapping(value = "chanel")

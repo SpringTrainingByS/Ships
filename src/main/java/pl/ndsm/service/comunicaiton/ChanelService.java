@@ -1,4 +1,4 @@
-package pl.ndsm.service;
+package pl.ndsm.service.comunicaiton;
 
 import java.util.ArrayList;
 import java.util.List;

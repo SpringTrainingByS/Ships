@@ -18,7 +18,7 @@ async function  preparePageAndLogic() {
 	else {
 		showPage();
 		userChanelName = localStorage.getItem(USER_CHANEL_NAME);
-		connectWithChanels();
+		await connectWithChanels();
 	}
 }
 
@@ -50,12 +50,32 @@ async function connectWithChanels() {
 	
 	console.log("$" + USER_CHANEL_PREFIX + userChanelName + "$");
 	
-	stompClient.connect(headers, function (frame) {
+	await stompClient.connect(headers, function (frame) {
 		stompClient.subscribe(USER_CHANEL_PREFIX + userChanelName, function (message) {
 			doProperActionForUserChanel(message);
 		});
+		sendReadyToGameSignal();
 	}, function () { console.log("nie udało się połączyć z kanałami"); });
 	
+}
+
+async function sendReadyToGameSignal() {
+	
+	let url = SERVER_ADDRESS + "game/readiness";
+	
+	await $.ajax({
+		url:url,
+		type:"GET",
+		data: { user_id: localStorage.getItem(USER_ID)},
+		headers: {"Authorization" : localStorage.getItem(TOKEN_ACCESS_NAME)},
+		contentType:"application/json; charset=utf-8"
+	})
+	.then(function(response) {
+		console.log("Wysłano informację o gotowości na rozgrywkę");
+	}
+	, function(e) {
+		console.log("Nie udało się wysłać informacji o gotowości na rozgrywkę");
+	});
 }
 
 async function loadOwnShipSection() {
@@ -131,6 +151,7 @@ async function loadEnemyShipSection() {
 				span.setAttribute('title', "pos: " + i + j);
 				span.style.outline = "1px solid black";
 				$(span).click(function() {
+					console.log("Strzelam");
 					shotEnemyShip($(this).attr('id'));
 				});
 			}
@@ -142,12 +163,28 @@ async function loadEnemyShipSection() {
 	
 }
 
-
 async function shotEnemyShip(fieldId) {
+	console.log("Chcę strzelać.");
 	if (isUserTurn == 1) {
+		console.log("Pozwolona na strzelanie.");
 		let pos = fieldId.replace("enemy-pos", "");
 		console.log("Wysłana pozycja: " + pos);
 		
+		let url = SERVER_ADDRESS + "game/shot";
+		
+		await $.ajax({
+			url:url,
+			type:"GET",
+			data: { user_id: localStorage.getItem(USER_ID), location: pos},
+			headers: {"Authorization" : localStorage.getItem(TOKEN_ACCESS_NAME)},
+			contentType:"application/json; charset=utf-8"
+		})
+		.then(function(response) {
+			console.log("Wysyłam strzał na serwer.");
+		}
+		, function(e) {
+			console.log("Nie udało się wysłać statku na serwer.");
+		});
 	}
 }
 
@@ -198,23 +235,155 @@ function findFieldLocalization(field, fieldName) {
 } 
 
 function doProperActionForUserChanel(message) {
+	console.log("Odebrałem wiadomość");
+	console.log(message);
 	let result = JSON.parse(message.body);
-	let operationCode = parseInt(result.content);
+	let content = JSON.parse(result.content);
+	console.log("Content" + content);
+	let operationCode = parseInt(content.operationCode);
+	console.log("Kod operacji: " + operationCode);
+
 	
 	switch (operationCode) {
-		case USER_CHANEL_WR_CODES.MOVE_TO_GAME:
-			moveUserToGameRoom();
-		break;
-	} 
-}
-
-
-function moveUserToGameRoom() {
-	stompClient.disconnect();
-	$(" #moving-to-game-room-message ").show();
-	setTimeout(function() {
-		window.location.replace(SERVER_ADDRESS + "game-room");
-	}, 2000); 
 	
+		case USER_CHANEL_GR_CODES.FIRST_WAIT:
+			prepareToWait();
+			break;
+		
+		case USER_CHANEL_GR_CODES.FIRST_SHOOT:
+			prepareToFirstShot();
+			break;
+		
+		case USER_CHANEL_GR_CODES.ENEMY_SHOT_SUCCESS: 
+			prepareAfterEnemyShotSucces(content);
+			break;
+		
+		case USER_CHANEL_GR_CODES.YOUR_SHOT_SUCCESS: 
+			prepareAfterYouShoutSuccess(content);
+			break;
+		
+		case USER_CHANEL_GR_CODES.ENEMY_SHOT_FAILURE: 
+			prepareAfterEnemyShotFailure(content);
+			break;
+			
+		case USER_CHANEL_GR_CODES.YOUR_SHOT_FAILURE:
+			prepareAfterYourShotFailure(content);
+			break;
+		
+		case USER_CHANEL_GR_CODES.YOUR_SHIP_DESTROYED: 
+			prepareAfterYourShipDestroyed(content);
+			break;
+			
+		case USER_CHANEL_GR_CODES.ENEMY_SHIP_DESTROYED:
+			prepareAfterEnemyShipDestroyed(content);
+			break;
+			
+		case USER_CHANEL_GR_CODES.LOSS_OF_OWN_TIME: 
+			prepareAfterLossOfOwnTime(content);
+			break;
+			
+		case USER_CHANEL_GR_CODES.LOSS_OF_ENEMY_TIME: 
+			prepareAfterLossOfEnemyTime(content);
+			break;
+			
+		case USER_CHANEL_GR_CODES.VICTORY_RESULT: 
+			prepareAfterVictoryResult(content);
+			break;
+			
+		case USER_CHANEL_GR_CODES.LOSS_MATCH: 
+			prepareAfterLossMatch(content);
+			break;
+		
+		default: 
+			console.log("zły kod operacji");
+			break;
+	} 
+	
+	console.log("isUserTurn: " + isUserTurn);
 }
 
+// przygotowania
+
+async function prepareToFirstShot() {
+	console.log("Przygotowuję użytkownika do pierwszego strzału");
+	$("#fast-message").text("Oddajesz strzał jako pierwszy.");
+	isUserTurn = 1;
+}
+
+async function prepareToWait() {
+	console.log("User przygotowywany do poczekania");
+	$("#fast-message").text("Czekasz.");
+	isUserTurn = 0;
+}
+
+// po przygotowaniach
+
+async function prepareAfterEnemyShotSucces(content) {
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	changeCellColor("yellow", "own-pos", content.localization);
+	$("#fast-message").text("Twój statek został trafiony. Czekasz.");
+} 
+
+async function prepareAfterYouShoutSuccess(content) {
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	changeCellColor("yellow", "enemy-pos", content.localization);
+	$("#fast-message").text("Trafiłeś statek wroga. Twoja kolej.");
+}
+
+async function prepareAfterEnemyShotFailure(content) {
+	console.log("Wykonuję prepareAfterEnemyShotFailure ");
+	isUserTurn = 1;
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	changeCellColor("black", "own-pos", content.localization);
+	$("#fast-message").text("Twoja kolej.");
+}
+
+async function prepareAfterYourShotFailure(content) {
+	console.log("Wykonuję prepareAfterYourShotFailure");
+	isUserTurn = 0;
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	changeCellColor("black", "enemy-pos", content.localization);
+	$("#fast-message").text("Pudło. Czekasz.");
+}
+
+async function prepareAfterYourShipDestroyed(content) {
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	changeCellColor("red", "own-pos", content.localization);
+	$("#fast-message").text("Twój statek został zniszczony. Czekasz.");
+}
+
+async function prepareAfterEnemyShipDestroyed(content) {
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	changeCellColor("red", "enemy-pos", content.localization);
+	$("#fast-message").text("Zniszczyłeś statek wroga. Twoja kolej.");
+}
+
+async function prepareAfterLossOfOwnTime(content) {
+	isUserTurn = 0;
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#fast-message").text("Straciłeś czas. Czekasz.");
+}
+
+async function prepareAfterLossOfEnemyTime(content) {
+	isUserTurn = 1;
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#fast-message").text("Twój wróg stracił czas. Twoja kolej.");
+}
+
+async function prepareAfterVictoryResult(content) {
+	isUserTurn = 0;
+	changeCellColor("red", "enemy-pos", content.localization);
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#fast-message").text("WYGRAŁEŚ!!!!!!!!!!!!!!!!!");
+}
+
+async function prepareAfterLossMatch(content) {
+	isUserTurn = 0;
+	changeCellColor("red", "own-pos", content.localization);
+	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#fast-message").text("PRZEGRAŁEŚ!!!!!!!!!!!!!!!!");
+}
+
+function changeCellColor(color, prefixId, posId) {
+	$("#" + prefixId + posId).get(0).style.backgroundColor = color;
+}

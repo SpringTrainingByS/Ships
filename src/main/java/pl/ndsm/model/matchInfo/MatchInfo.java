@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import pl.ndsm.model.userInfo.UserApp;
 
 @Entity
-@Table(name = "match_info")
 public class MatchInfo {
 
 	@Id
@@ -27,18 +26,13 @@ public class MatchInfo {
 	private UserApp user2;
 	
 	public MatchInfo() {
-		super();
+	
 	}
-	
-	
 
 	public MatchInfo(UserApp user1, UserApp user2) {
-		super();
 		this.user1 = user1;
 		this.user2 = user2;
 	}
-
-
 
 	public long getId() {
 		return id;

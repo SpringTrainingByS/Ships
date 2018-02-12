@@ -33,6 +33,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	runtime('mysql:mysql-connector-java')
 	
+	runtime group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest', version: '1.5.10.RELEASE'
+	
 	compile("org.webjars:webjars-locator")
     compile("org.webjars:sockjs-client:1.0.2")
     compile("org.webjars:stomp-websocket:2.3.3")

@@ -11,6 +11,7 @@ import pl.ndsm.dao.WaitingForMatchDao;
 import pl.ndsm.dao.matchInfo.MatchDao;
 import pl.ndsm.model.matchInfo.MatchInfo;
 import pl.ndsm.model.userInfo.UserApp;
+import pl.ndsm.service.comunicaiton.ChanelTransmitter;
 
 @Service
 public class MatchService {

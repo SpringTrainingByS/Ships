@@ -26,13 +26,12 @@ public class Ship {
 	@JoinColumn(name = "user_id")
 	private UserApp user;
 	
-	@Column(name = "shot_count")
+	@Column(name = "shot_count", columnDefinition = "Integer default 0")
 	private int shotCount;
 	
 	private int size;
 
 	public Ship() {
-		super();
 	}
 
 	public long getId() {

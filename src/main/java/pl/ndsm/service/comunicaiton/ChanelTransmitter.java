@@ -1,4 +1,4 @@
-package pl.ndsm.service;
+package pl.ndsm.service.comunicaiton;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,6 +21,11 @@ public class ChanelTransmitter {
 	
 	public void sendMessageToUser(String chanelPath, String content) {
 		websocket.convertAndSend(chanelPath, new Message(content));
+	}
+	
+	public void sendMessageToUser(String chanelPath, int content) {
+		String result = Integer.toString(content);
+		websocket.convertAndSend(chanelPath, new Message(result));
 	}
 	
 }

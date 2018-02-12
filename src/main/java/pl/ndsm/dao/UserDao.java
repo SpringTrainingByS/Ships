@@ -16,4 +16,7 @@ public interface UserDao extends CrudRepository<UserApp, Long> {
 	
 	@Query(value = "SELECT id FROM user_app WHERE username = :username", nativeQuery = true)
 	public Long findIdByUsername(@Param("username") String username); 
+	
+	@Query(value = "SELECT id FROM user_app LIMIT 1", nativeQuery = true)
+	public long findFirstUser();
 }

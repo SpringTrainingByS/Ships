@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import pl.ndsm.model.shipInfo.Ship;
 
 @Entity
-@Table(name = "sip_size_5")
-public class ShipSize5 {
+@Table(name = "ship_size_5")
+public class ShipSize5 extends ShipSize {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -54,6 +54,4 @@ public class ActualMatches {
 		this.match = match;
 	}
 	
-	
-
 }
