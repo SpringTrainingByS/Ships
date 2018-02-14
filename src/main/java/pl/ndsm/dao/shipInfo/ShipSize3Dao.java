@@ -13,5 +13,6 @@ import pl.ndsm.model.shipInfo.fieldLocation.ShipSize3;
 public interface ShipSize3Dao extends CrudRepository<ShipSize3, Long>{
 
 	public List<ShipSize3> findByShipIdIn(List<Long> shipsIds);
+	public void deleteByShipIdIn(List<Long> shipIdsList);
 
 }

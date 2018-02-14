@@ -2,13 +2,13 @@ $(function () {
 	$( "#registration-section" ).hide();
 	$("#go-to-login").hide();
 	
-	$( "#registration-button" ).click(async function() {
+	$( "#register-submit" ).click(async function(e) {
 		console.log("rejestracja");
-		await register();
+		await register(e);
 	});
 	
-	$("#login-button").bind("click", async function() {
-		await login();
+	$("#login-submit").bind("click", async function(e) {
+		await login(e);
 	});
 	
 	$("#go-to-login").bind("click", function() {
@@ -24,11 +24,42 @@ $(function () {
 		$("#go-to-login").show();
 		$("#go-to-registration").hide();
 	});
+	
+	
+	$('#login-form-link').click(function(e) {
+		$("#login-message").empty();
+		$("#login-form").delay(100).fadeIn(100);
+ 		$("#register-form").fadeOut(100);
+		$('#register-form-link').removeClass('active');
+		$(this).addClass('active');
+		e.preventDefault();
+	});
+	$('#register-form-link').click(function(e) {
+		$("#registration-message").empty();
+		$("#register-form").delay(100).fadeIn(100);
+ 		$("#login-form").fadeOut(100);
+		$('#login-form-link').removeClass('active');
+		$(this).addClass('active');
+		e.preventDefault();
+	});
+	
 });
 
-async function register() {
+async function register(e) {
+	
+	e.preventDefault();
+	
 	let login = $( "#login" ).val();
 	let password = $( "#password1" ).val();
+	let confirmPassword = $( "#password2" ).val();
+	
+	if (password != confirmPassword) {
+		$( "#registration-message" ).empty();
+		$( "#registration-message" ).append("<p>" + "Hasła nie są identyczne." + "</p>");
+		
+		return;
+	}
+	
 	
 	let url = SERVER_ADDRESS + "user/register";
 
@@ -44,7 +75,14 @@ async function register() {
 		contentType:"application/json; charset=utf-8"
 	})
 	.then(function() {
-		showProperSectionAfterRegistration();
+		console.log("")
+		$("#login-message").empty();
+		$("#login-form").delay(100).fadeIn(100);
+ 		$("#register-form").fadeOut(100);
+		$('#register-form-link').removeClass('active');
+		$(this).addClass('active');
+		$( "#login-message" ).empty();
+		$( "#login-message" ).append("<p>" + "Rejestracja zakończona sukcesem. Teraz możesz się zalogować." + "</p>");
 	}
 	, function(e) {
 		showRegistrationErrors(e);
@@ -52,11 +90,8 @@ async function register() {
 	
 	function showProperSectionAfterRegistration() {
 		console.log("udało się");
-		$( "#registration-section" ).hide();
-		$( "#login-section" ).show();
-		$( "#login-message" ).append("<p>" + "Rejestracja zakończona sukcesem. Teraz możesz się zalogować." + "</p>");
-		$("#go-to-login").hide();
-		$("#go-to-registration").show();
+		
+		
 	}
 	
 	function showRegistrationErrors(e) {
@@ -71,7 +106,9 @@ async function register() {
 	}
 }
 
-async function login() {
+async function login(e) {
+	
+	e.preventDefault();
 	
 	let username = $("#login-to-login").val();
 	let password = $("#password-to-login").val();
