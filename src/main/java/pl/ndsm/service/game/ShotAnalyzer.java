@@ -110,10 +110,10 @@ public class ShotAnalyzer {
 			
 			System.out.println("Zmieniam stan dla statku o klasie shipSize2");
 			
-			if (((ShipSize2) shipSize).getField1() == location) {
+			if (((ShipSize2) shipSize).getField1().equals(location)) {
 				((ShipSize2) shipSize).setField1("");
 			}
-			else if (((ShipSize2) shipSize).getField2() == location) {
+			else if (((ShipSize2) shipSize).getField2().equals(location)) {
 				((ShipSize2) shipSize).setField2("");
 			}
 			
@@ -150,13 +150,13 @@ public class ShotAnalyzer {
 			
 			System.out.println("Zmieniam stan dla statku o klasie shipSize3");
 			
-			if (((ShipSize3) shipSize).getField1() == location) {
+			if (((ShipSize3) shipSize).getField1().equals(location)) {
 				((ShipSize3) shipSize).setField1("");
 			}
-			else if (((ShipSize3) shipSize).getField2() == location) {
+			else if (((ShipSize3) shipSize).getField2().equals(location)) {
 				((ShipSize3) shipSize).setField2("");
 			}
-			else if (((ShipSize3) shipSize).getField3() == location) {
+			else if (((ShipSize3) shipSize).getField3().equals(location)) {
 				((ShipSize3) shipSize).setField3("");
 			}
 			
@@ -193,16 +193,16 @@ public class ShotAnalyzer {
 			
 			System.out.println("Zmieniam stan dla statku o klasie shipSize4");
 			
-			if (((ShipSize4) shipSize).getField1() == location) {
+			if (((ShipSize4) shipSize).getField1().equals(location)) {
 				((ShipSize4) shipSize).setField1("");
 			}
-			else if (((ShipSize4) shipSize).getField2() == location) {
+			else if (((ShipSize4) shipSize).getField2().equals(location)) {
 				((ShipSize4) shipSize).setField2("");
 			}
-			else if (((ShipSize4) shipSize).getField3() == location) {
+			else if (((ShipSize4) shipSize).getField3().equals(location)) {
 				((ShipSize4) shipSize).setField3("");
 			}
-			else if (((ShipSize4) shipSize).getField4() == location) {
+			else if (((ShipSize4) shipSize).getField4().equals(location)) {
 				((ShipSize4) shipSize).setField4("");
 			}
 			
@@ -239,19 +239,19 @@ public class ShotAnalyzer {
 			
 			System.out.println("Zmieniam stan dla statku o klasie shipSize5");
 			
-			if (((ShipSize5) shipSize).getField1() == location) {
+			if (((ShipSize5) shipSize).getField1().equals(location)) {
 				((ShipSize5) shipSize).setField1("");
 			}
-			else if (((ShipSize5) shipSize).getField2() == location) {
+			else if (((ShipSize5) shipSize).getField2().equals(location)) {
 				((ShipSize5) shipSize).setField2("");
 			}
-			else if (((ShipSize5) shipSize).getField3() == location) {
+			else if (((ShipSize5) shipSize).getField3().equals(location)) {
 				((ShipSize5) shipSize).setField3("");
 			}
-			else if (((ShipSize5) shipSize).getField4() == location) {
+			else if (((ShipSize5) shipSize).getField4().equals(location)) {
 				((ShipSize5) shipSize).setField4("");
 			}
-			else if (((ShipSize5) shipSize).getField5() == location) {
+			else if (((ShipSize5) shipSize).getField5().equals(location)) {
 				((ShipSize5) shipSize).setField5("");
 			}
 			
