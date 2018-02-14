@@ -328,6 +328,7 @@ async function prepareAfterYouShoutSuccess(content) {
 	$("#game-messages").append("<p>" + content.message + "</p>");
 	changeCellColor("yellow", "enemy-pos", content.localization);
 	$("#fast-message").text("Trafiłeś statek wroga. Twoja kolej.");
+	$("#enemy-pos" + content.localization).unbind( "click" );
 }
 
 async function prepareAfterEnemyShotFailure(content) {
@@ -344,6 +345,7 @@ async function prepareAfterYourShotFailure(content) {
 	$("#game-messages").append("<p>" + content.message + "</p>");
 	changeCellColor("black", "enemy-pos", content.localization);
 	$("#fast-message").text("Pudło. Czekasz.");
+	$("#enemy-pos" + content.localization).unbind( "click" );
 }
 
 async function prepareAfterYourShipDestroyed(content) {
@@ -386,4 +388,8 @@ async function prepareAfterLossMatch(content) {
 
 function changeCellColor(color, prefixId, posId) {
 	$("#" + prefixId + posId).get(0).style.backgroundColor = color;
+}
+
+function removeClickListenerFromField(loc) {
+	$("#enemy-pos" + localization).unbind( "click" );
 }

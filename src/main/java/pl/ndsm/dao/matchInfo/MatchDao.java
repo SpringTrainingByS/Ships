@@ -34,4 +34,6 @@ public interface MatchDao extends CrudRepository<MatchInfo, Long> {
 	
 	public UsersIds findById(long matchInfoId);
 	
+	public void deleteById(long id);
+	
 }

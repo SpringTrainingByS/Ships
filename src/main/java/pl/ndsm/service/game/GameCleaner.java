@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pl.ndsm.dao.matchInfo.MatchDao;
 import pl.ndsm.dao.matchInfo.PlayerTurnDao;
+import pl.ndsm.dao.matchInfo.QuantitySunkDao;
 import pl.ndsm.dao.shipInfo.ShipDao;
 import pl.ndsm.dao.shipInfo.ShipSize2Dao;
 import pl.ndsm.dao.shipInfo.ShipSize3Dao;
@@ -35,9 +37,15 @@ public class GameCleaner {
 	@Autowired 
 	private PlayerTurnDao playerTurnDao;
 	
+	@Autowired
+	private QuantitySunkDao sunkDao;
+	
+	@Autowired
+	private MatchDao matchInfoDao;
 	
 	
-	public void clearAllGameInfos(long userId, long enemyId, long MatchInfoId) { 
+	
+	public void clearAllGameInfos(long userId, long enemyId, long matchInfoId) { 
 		
 		List<BigInteger> shipsIdsUser = shipDao.findShipsIdsByUserId(userId);
 		List<BigInteger> shipsIdsEnemy = shipDao.findShipsIdsByUserId(enemyId);
@@ -59,6 +67,12 @@ public class GameCleaner {
 		
 		shipDao.deleteByIdIn(allShipsIds);
 		
+		playerTurnDao.deleteByMatchInfoId(matchInfoId);
+		
+		sunkDao.deleteByUserId(userId);
+		sunkDao.deleteByUserId(enemyId);
+		
+		matchInfoDao.deleteById(matchInfoId);
 		
 	}
 	

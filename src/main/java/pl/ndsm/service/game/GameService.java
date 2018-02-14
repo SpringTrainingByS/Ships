@@ -167,8 +167,8 @@ public class GameService {
 		if (shotResult == shotResult.MISSED) {
 			playerTurnDao.updateByMatchId(matchInfoId, enemyId);
 		}
-		else {
-			
+		else if (shotResult == ShotResult.WIN) {
+			gameCleaner.clearAllGameInfos(userId, enemyId, matchInfoId); 
 		}
 		
 		Map messages =  prepareResultShotMessage(userId, enemyId, shotResult, location);

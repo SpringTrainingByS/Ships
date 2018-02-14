@@ -25,4 +25,6 @@ public interface PlayerTurnDao extends CrudRepository<PlayerTurn, Long> {
 	@Query(value = "SELECT match_info_id FROM player_turn WHERE user_id = :userId", nativeQuery = true)
 	public Long findMatchInfoIdByUserId(@Param("userId") long userId);
 	
+	public void deleteByMatchInfoId(long matchInfoId);
+	
 }

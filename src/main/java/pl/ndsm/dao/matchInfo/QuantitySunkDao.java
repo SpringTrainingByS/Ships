@@ -17,4 +17,6 @@ public interface QuantitySunkDao extends CrudRepository<QuantitySunk, Long>{
 	@Modifying
 	@Query(value = "INSERT INTO quantity_sunk (user_id) VALUES (:userId)", nativeQuery = true)
 	public void insert(@Param("userId") long userId);
+	
+	public void deleteByUserId(long userId);
 }
