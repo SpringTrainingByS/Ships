@@ -50,6 +50,9 @@ public class GameService {
 	@Autowired 
 	private QuantitySunkDao quantiySunkDao;
 	
+	@Autowired
+	private GameCleaner gameCleaner;
+	
 	private long firstPlayerId = 0L;
 	private long secondPlayerId = 0L;
 	
@@ -164,6 +167,9 @@ public class GameService {
 		if (shotResult == shotResult.MISSED) {
 			playerTurnDao.updateByMatchId(matchInfoId, enemyId);
 		}
+		else {
+			
+		}
 		
 		Map messages =  prepareResultShotMessage(userId, enemyId, shotResult, location);
 		
@@ -187,7 +193,6 @@ public class GameService {
 		
 		messageForUser.setLocalization(location);
 		messageForEnemy.setLocalization(location);
-		
 		
 		switch (shotResult) {
 		

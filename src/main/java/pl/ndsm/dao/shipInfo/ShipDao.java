@@ -14,6 +14,8 @@ public interface ShipDao extends CrudRepository<Ship, Long>{
 	@Query(value = "SELECT id FROM ship WHERE user_id = :userId", nativeQuery = true)
 	public List<BigInteger> findShipsIdsByUserId(@Param("userId") long userId);
 	
+	public void deleteByIdIn(List<Long> shipsIdsList);
+	
 	//@Query(value = "SELECT id FROM ")
  	
 }
