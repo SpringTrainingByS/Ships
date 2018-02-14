@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import pl.ndsm.model.userInfo.User;
+import pl.ndsm.model.userInfo.UserApp;
 
 @Entity
 public class WaitingForMatch {
@@ -18,7 +18,7 @@ public class WaitingForMatch {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	User user;
+	UserApp user;
 
 	public WaitingForMatch() {
 		super();
@@ -32,11 +32,11 @@ public class WaitingForMatch {
 		this.id = id;
 	}
 
-	public User getUser() {
+	public UserApp getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserApp user) {
 		this.user = user;
 	}
 	

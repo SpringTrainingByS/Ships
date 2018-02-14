@@ -1,5 +1,6 @@
 package pl.ndsm.model.shipInfo.fieldLocation;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,14 +12,14 @@ import javax.persistence.Table;
 import pl.ndsm.model.shipInfo.Ship;
 
 @Entity
-@Table(name = "sip_size_3")
-public class ShipSize3 {
+@Table(name = "ship_size_3")
+public class ShipSize3 extends ShipSize {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ship_id")
 	private Ship ship;
 	
@@ -71,7 +72,11 @@ public class ShipSize3 {
 	public void setField3(String field3) {
 		this.field3 = field3;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "ShipSize3 [id=" + id + ", ship=" + ship + ", field1=" + field1 + ", field2=" + field2 + ", field3="
+				+ field3 + "]";
+	}
 
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="components/head :: libraries">
+	<meta charset="UTF-8"/>
+	<title>Witamy w grze :)</title>
+</head>
+<body>
+	<div class="container">
+		<p>Witamy w rozgrywce.</p>
+		<button id="clear-local-storage">Wyczyść pamięć local storage</button>
+		<button id="send-ships-to-server">Wyślij statki na serwer</button>
+		<div class="jumbotron" id="moving-to-game-room-message">
+			Za chwilę zostaniesz przeniesiony do rogrywki
+		</div>
+		<div class="jumbotron" id="alone-message">
+			Na razie jesteś sam w kolejce gdy pojawi się nowa osoba zostaniesz przekierowany do rozgrywki.
+		</div>
+		<h2>Aktualne rozgrywki</h2>
+		<section id="actual-matches">
+			
+		</section>
+	</div>
+</body>
+<script th:src="@{/js/ship_definition.js}"></script>
+<script th:src="@{/js/waiting-room.js}"></script>
+</html>

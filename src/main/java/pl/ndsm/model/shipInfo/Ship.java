@@ -1,5 +1,6 @@
 package pl.ndsm.model.shipInfo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import pl.ndsm.model.userInfo.User;
+import pl.ndsm.model.userInfo.UserApp;
 
 @Entity
 public class Ship {
@@ -17,21 +18,20 @@ public class Ship {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "state_of_ship_id")
 	private StateOfShip stateOfShip;
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private UserApp user;
 	
-	@Column(name = "shot_count")
+	@Column(name = "shot_count", columnDefinition = "Integer default 0")
 	private int shotCount;
 	
 	private int size;
 
 	public Ship() {
-		super();
 	}
 
 	public long getId() {
@@ -50,11 +50,11 @@ public class Ship {
 		this.stateOfShip = stateOfShip;
 	}
 
-	public User getUser() {
+	public UserApp getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserApp user) {
 		this.user = user;
 	}
 
@@ -73,5 +73,13 @@ public class Ship {
 	public void setSize(int size) {
 		this.size = size;
 	}
+
+	@Override
+	public String toString() {
+		return "Ship [id=" + id + ", stateOfShip=" + stateOfShip + ", user=" + user + ", shotCount=" + shotCount
+				+ ", size=" + size + "]";
+	}
+	
+	
 	
 }

@@ -16,7 +16,7 @@ public class UserState {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private UserApp user;
 	
 	@OneToOne
 	@JoinColumn(name = "state_id")
@@ -34,11 +34,11 @@ public class UserState {
 		this.id = id;
 	}
 
-	public User getUser() {
+	public UserApp getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserApp user) {
 		this.user = user;
 	}
 

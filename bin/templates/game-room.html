@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="components/head :: libraries">
+	<meta charset="UTF-8"/>
+	<title>Witamy w grze :)</title>
+</head>
+<body>
+	<div class="container">
+		<div class="row is-flex">
+			<div class="col-12 col-sm-12 col-md-4" id="enemy-ship-section">
+			<div class="row">
+				<h2>Pole Wroga</h2>
+			</div>
+			<div id="enemy-ship-section-table">
+			</div>
+		</div>
+		<div class="col-12 col-sm-12 col-md-4 h-50" id="own-ship-section">
+			<h2 id="fast-message"></h2>
+			<div id="game-messages">
+				
+			</div>
+		</div>
+		<div class="col-12 col-sm-12 col-md-4" id="own-ship-section">
+			<div class="row">
+				<h2>Twoje statki</h2>
+			</div>
+			<div id="own-ship-section-table">
+			</div>
+		</div>
+		</div>
+	</div>
+</body>
+<script th:src="@{/js/game-room.js}"></script>
+</html>
