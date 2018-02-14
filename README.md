@@ -2,9 +2,9 @@
 
 ## Opis branchy
 
-### master - trafi tam wersja już finalna.
-### backend - cała logika serwera na spring bootcie i moje "piękne" wygldające jak piękne straszące księżniczki widoki.
-### bf - jeszcze nie istnieje tu będę złączał wyniki naszej pracy.
+## frontend, master, backend - teraz zawierają taką samą zawartość
+## na backendzie dalej kontynuję pracę nad grą
+## frontend będzie tylko służył do wstawiania frontendu
 
 ## Konfiguracja projektu
 
