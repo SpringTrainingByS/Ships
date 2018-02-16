@@ -328,12 +328,14 @@ async function prepareToWait() {
 
 async function prepareAfterEnemyShotSucces(content) {
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	changeCellColor("yellow", "own-pos", content.localization);
 	$("#fast-message").text("Twój statek został trafiony. Czekasz.");
 } 
 
 async function prepareAfterYouShoutSuccess(content) {
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	changeCellColor("yellow", "enemy-pos", content.localization);
 	$("#fast-message").text("Trafiłeś statek wroga. Twoja kolej.");
 	$("#enemy-pos" + content.localization).unbind( "click" );
@@ -343,6 +345,7 @@ async function prepareAfterEnemyShotFailure(content) {
 	console.log("Wykonuję prepareAfterEnemyShotFailure ");
 	isUserTurn = 1;
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	changeCellColor("black", "own-pos", content.localization);
 	$("#fast-message").text("Twoja kolej.");
 }
@@ -351,6 +354,7 @@ async function prepareAfterYourShotFailure(content) {
 	console.log("Wykonuję prepareAfterYourShotFailure");
 	isUserTurn = 0;
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	changeCellColor("black", "enemy-pos", content.localization);
 	$("#fast-message").text("Pudło. Czekasz.");
 	$("#enemy-pos" + content.localization).unbind( "click" );
@@ -358,12 +362,14 @@ async function prepareAfterYourShotFailure(content) {
 
 async function prepareAfterYourShipDestroyed(content) {
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	changeCellColor("red", "own-pos", content.localization);
 	$("#fast-message").text("Twój statek został zniszczony. Czekasz.");
 }
 
 async function prepareAfterEnemyShipDestroyed(content) {
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	changeCellColor("red", "enemy-pos", content.localization);
 	$("#fast-message").text("Zniszczyłeś statek wroga. Twoja kolej.");
 }
@@ -371,12 +377,14 @@ async function prepareAfterEnemyShipDestroyed(content) {
 async function prepareAfterLossOfOwnTime(content) {
 	isUserTurn = 0;
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	$("#fast-message").text("Straciłeś czas. Czekasz.");
 }
 
 async function prepareAfterLossOfEnemyTime(content) {
 	isUserTurn = 1;
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	$("#fast-message").text("Twój wróg stracił czas. Twoja kolej.");
 }
 
@@ -384,6 +392,7 @@ async function prepareAfterVictoryResult(content) {
 	isUserTurn = 0;
 	changeCellColor("red", "enemy-pos", content.localization);
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	$("#fast-message").text("WYGRAŁEŚ!!!");
 }
 
@@ -391,6 +400,7 @@ async function prepareAfterLossMatch(content) {
 	isUserTurn = 0;
 	changeCellColor("red", "own-pos", content.localization);
 	$("#game-messages").append("<p>" + content.message + "</p>");
+	$("#game-messages").scrollTop($("#game-messages").prop("scrollHeight"));
 	$("#fast-message").text("PRZEGRAŁEŚ!!!");
 }
 
