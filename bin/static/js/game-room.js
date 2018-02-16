@@ -27,8 +27,8 @@ async function showPage() {
 	await loadOwnShipSection();
 	putShipsToOwnShipSection();
 	loadEnemyShipSection();
+	changeSizeGameMessagesDivOnResize();
 }
-
 
 async function loadShipDefinition() {
 	if (localStorage.getItem(SHIP_CONTAINER) != null) {
@@ -39,6 +39,14 @@ async function loadShipDefinition() {
 	}
 }
 
+function changeSizeGameMessagesDivOnResize() {
+    var height = $("#enemy-ship-section-table").css("height");
+    console.log("height: " + height);
+    $("#game-messages").css("height", height);
+    $( window ).resize(function() {
+        $("#game-messages").height = $("#enemy-ship-section-table").height;
+    }); 
+}  
 
 async function connectWithChanels() {
 	
@@ -376,14 +384,14 @@ async function prepareAfterVictoryResult(content) {
 	isUserTurn = 0;
 	changeCellColor("red", "enemy-pos", content.localization);
 	$("#game-messages").append("<p>" + content.message + "</p>");
-	$("#fast-message").text("WYGRAŁEŚ!!!!!!!!!!!!!!!!!");
+	$("#fast-message").text("WYGRAŁEŚ!!!");
 }
 
 async function prepareAfterLossMatch(content) {
 	isUserTurn = 0;
 	changeCellColor("red", "own-pos", content.localization);
 	$("#game-messages").append("<p>" + content.message + "</p>");
-	$("#fast-message").text("PRZEGRAŁEŚ!!!!!!!!!!!!!!!!");
+	$("#fast-message").text("PRZEGRAŁEŚ!!!");
 }
 
 function changeCellColor(color, prefixId, posId) {
