@@ -8,6 +8,7 @@ var stompClient;
 
 preparePageAndLogic(); 
 
+
 async function  preparePageAndLogic() {
 	if (localStorage.getItem(TOKEN_ACCESS_NAME) == null) {
 		window.location.replace(SERVER_ADDRESS);
@@ -19,6 +20,9 @@ async function  preparePageAndLogic() {
 		await obtainUserChanelName();
 		userChanelName = localStorage.getItem(USER_CHANEL_NAME);
 		await connectWithChanels();
+		loadOwnShipSection();
+		randomShips();
+		showShipsOnPanel();
 		getActualMatchesByRest();
 	}
 }
@@ -211,8 +215,447 @@ function moveUserToGameRoom() {
 	
 }
 
+async function loadOwnShipSection() {
+	
+	let row = document.createElement("div"); 
+	let span = document.createElement('span');
+	row.setAttribute('class', 'row');
+	span.setAttribute('class', 'col-lp');
+	row.appendChild(span);
+	
+	for (i = 1; i <= 10; i++) {
+		let span = document.createElement('span');
+		span.setAttribute('class', 'col-lp');
+		span.innerHTML = i;
+		row.appendChild(span);
+	}
+	$("#own-ship-section-table").append(row);
+	
+	for (i = 1; i <= 10; i++) {
+		let row = document.createElement("div");
+		row.setAttribute('class', 'row');
+		for (j = 0; j <= 10; j++) {
+			let span = document.createElement('span');
+			
+			if (j == 0) {
+				span.setAttribute('class', 'col-lp');
+				span.innerHTML = i;
+			}
+			else {
+				span.setAttribute('class', 'col-ship');
+				span.innerHTML = " ";
+				span.setAttribute('id', 'own-pos' + i + j);
+				span.setAttribute('title', "pos: " + i + j);
+				span.style.outline = "1px solid black";
+			}
+			
+			row.appendChild(span);
+		}
+		$("#own-ship-section-table").append(row);
+	}
+}
+
+var ALLOWED_FIELDS = [];
+var TAKEN_FIELDS = [];
+var FORBIDDEN_FIELDS = [];
+var SHIPS = [];
+
+async function randomShips() {
+	prepareFieldsInfo();
+	findFieldsForAllShips();
+}
+
+function prepareFieldsInfo() {
+	let val = "";
+	for (i = 1; i <= 10; i++) {
+		for (j = 1; j <= 10; j++) {
+			val = i + "" + j;
+			ALLOWED_FIELDS.push(val);	
+		}
+	}
+}
+
+var SHIP_DIRECTION = {
+		UP: 0,
+		DOWN: 1,
+		RIGHT: 2,
+		LEFT: 3
+	};
 
 
+var SHIP_SIZES = [2, 3, 3, 4, 5];
+
+function findFieldsForAllShips() {
+	for (size of SHIP_SIZES) {
+		console.log("Losuję pozycję dla statku o rozmiarze: " + size);
+		findFieldsForShip(size); 
+	}
+}
 
 
+function findFieldsForShip(size) {
 
+	let firstFieldInfo = randomFirstField();
+	
+	if ( checkFieldsUp(firstFieldInfo, size) ) {
+		console.log("Statek o rozmiarze: " + size + " tworzy pola w górę");
+		removeFieldsFromAllowedToUp(firstFieldInfo, size);
+		addShipLocationsToUp(firstFieldInfo, size) 
+	}
+	else if ( checkFieldsRight(firstFieldInfo, size) ) {
+		console.log("Statek o rozmiarze: " + size + " tworzy pola w w prawo");
+		removeFieldsFromAllowedToRight(firstFieldInfo, size);
+		addShipLocationsToRight(firstFieldInfo, size); 
+	}
+	else if ( checkFieldsDown(firstFieldInfo, size) ) {
+		console.log("Statek o rozmiarze: " + size + " tworzy pola w dół");
+		removeFieldsFromAllowedToDown(firstFieldInfo, size);
+		addShipLocationsToDown(firstFieldInfo, size); 
+	}
+	else if ( checkFieldsLeft(firstFieldInfo, size) ) {
+		console.log("Statek o rozmiarze: " + size + " tworzy pola w lewo");
+		removeFieldsFromAllowedToLeft(firstFieldInfo, size);
+		addShipLocationsToLeft(firstFieldInfo, size); 
+	} 
+	
+	console.log("Statki: ");
+	console.log(SHIPS);
+	
+}
+
+function randomFirstField() {
+	
+	let isAllowedField = false;
+	
+	let x = "";
+	let y = "";
+	let xy = "";
+	
+	do {
+		
+		x = Math.floor((Math.random() * 10) + 1);
+		y = Math.floor((Math.random() * 10) + 1);
+		xy = x + "" + y;
+		
+		if (ALLOWED_FIELDS.indexOf(xy) != -1) {
+			isAllowedField = true;
+		}
+		
+	} while (!isAllowedField);
+	
+	console.log("Wylosowane pole: " + xy);
+	
+	return {
+		"x": x,
+		"y": y,
+		"xy": xy
+	};
+	
+}
+
+function checkFieldsUp(firstFieldInfo, size) {
+	
+	console.log("sprawdzanie dla pola " + firstFieldInfo.xy);
+	
+	let upDirectionWright = true;
+	
+	let x = firstFieldInfo.x;
+	let y = firstFieldInfo.y;
+	
+	x--;
+	size--;
+	
+	for (i = x; i > 0 && size > 0; i--, size--) {
+		let loc = i + "" + y;
+		console.log("Badana pozycja: " + loc);
+		
+		if (TAKEN_FIELDS.indexOf(loc) != -1) {
+		console.log("Pole jest już zajęte przez inny statek");
+			break;
+		}
+		else if (FORBIDDEN_FIELDS.indexOf(loc) != -1) {
+			console.log("Pole jest już zajęte w obrębie restrykcyjnym.");
+			break;
+		}
+ 	} 
+	
+	if (size > 0) {
+		console.log("Rozmiar nie został w pełni zmniejszony.");
+		upDirectionWright = false;
+	}
+	
+	return upDirectionWright;
+	
+} 
+
+function checkFieldsRight(firstFieldInfo, size) {
+	
+	console.log("sprawdzanie dla pola pozycji w prawo " + firstFieldInfo.xy);
+	
+	let rightDirectionWright = true;
+	
+	let x = firstFieldInfo.x;
+	let y = firstFieldInfo.y;
+	
+	y++;
+	size--;
+	
+	for (i = y; i <= 10 && size > 0; i++, size--) {
+		let loc = x + "" + i;
+		console.log("Badana pozycja: " + loc);
+		
+		if (TAKEN_FIELDS.indexOf(loc) != -1) {
+		console.log("Pole jest już zajęte przez inny statek");
+			break;
+		}
+		else if (FORBIDDEN_FIELDS.indexOf(loc) != -1) {
+			console.log("Pole jest już zajęte w obrębie restrykcyjnym.");
+			break;
+		}
+ 	} 
+	
+	if (size > 0) {
+		console.log("Rozmiar nie został w pełni zmniejszony.");
+		rightDirectionWright = false;
+	}
+	
+	return rightDirectionWright;
+	
+}
+  
+function checkFieldsDown(firstFieldInfo, size) {
+	
+	console.log("sprawdzanie dla pola pozycji w dół " + firstFieldInfo.xy);
+	
+	let downDirectionWright = true;
+	
+	let x = firstFieldInfo.x;
+	let y = firstFieldInfo.y;
+	
+	x++;
+	size--;
+	
+	for (i = x; i <= 10 && size > 0; i++, size--) {
+		let loc = i + "" + y;
+		console.log("Badana pozycja: " + loc);
+		
+		if (TAKEN_FIELDS.indexOf(loc) != -1) {
+			console.log("Pole jest już zajęte przez inny statek");
+			break;
+		}
+		else if (FORBIDDEN_FIELDS.indexOf(loc) != -1) {
+			console.log("Pole jest już zajęte w obrębie restrykcyjnym.");
+			break;
+		}
+ 	} 
+	
+	if (size > 0) {
+		console.log("Rozmiar nie został w pełni zmniejszony.");
+		downDirectionWright = false;
+	}
+	
+	return downDirectionWright;
+	
+}
+
+function checkFieldsLeft(firstFieldInfo, size) {
+	
+	console.log("sprawdzanie dla pola pozycji w dół " + firstFieldInfo.xy);
+	
+	let leftDirectionWright = true;
+	
+	let x = firstFieldInfo.x;
+	let y = firstFieldInfo.y;
+	
+	y--;
+	size--;
+	
+	for (i = y; i > 0 && size > 0; i--, size--) {
+		let loc = x + "" + i;
+		console.log("Badana pozycja: " + loc);
+		
+		if (TAKEN_FIELDS.indexOf(loc) != -1) {
+			console.log("Pole jest już zajęte przez inny statek");
+			break;
+		}
+		else if (FORBIDDEN_FIELDS.indexOf(loc) != -1) {
+			console.log("Pole jest już zajęte w obrębie restrykcyjnym.");
+			break;
+		}
+ 	} 
+	
+	if (size > 0) {
+		console.log("Rozmiar nie został w pełni zmniejszony.");
+		leftDirectionWright = false;
+	}
+	
+	return leftDirectionWright;
+	
+}
+
+function removeFieldsFromAllowedToDown(firstFieldInfo, size) {
+	firstFieldInfo.x = firstFieldInfo.x + size - 1;
+	removeFieldsFromAllowedToUp(firstFieldInfo, size);
+}
+
+function removeFieldsFromAllowedToLeft(firstFieldInfo, size) {
+	firstFieldInfo.y = firstFieldInfo.y - size + 1;
+	removeFieldsFromAllowedToRight(firstFieldInfo, size);
+}
+
+function removeFieldsFromAllowedToUp(firstFieldInfo, size) {
+	
+	console.log("Wyjmuję pola z allowed idąc do góry.");
+	
+	let initX =  firstFieldInfo.x + 1;
+	let initY = firstFieldInfo.y - 1;
+	
+	console.log("Sprawdzenie 1 sekcji.");
+	
+	for (i = 0, y = initY; i < 3; i++, y++) {
+		if ((initX > 0 && initX < 11) && (y > 0 && y < 11)) {
+			let loc = initX + "" + y;
+			addFieldToForbiden(loc); 
+			removeFromAllowedFields(loc);
+		}
+	}
+	
+	console.log("Sprawdzenie 2 sekcji.");
+	
+	for (i = 0, x = initX - 1; i < size; i++, x--) {
+		for (j = 0, y = initY; j < 2; j++, y += 2) {
+			if ((x > 0 && x < 11) && (y > 0 && y < 11)) {
+				let loc = x + "" + y;
+				addFieldToForbiden(loc);
+				removeFromAllowedFields(loc);
+			}
+		}
+	}
+	
+	console.log("Sprawdzenie 3 sekcji.");
+	
+	for (i = 0, y = initY, x = firstFieldInfo.x - size; i < 3; i++, y++) {
+		if ((x > 0 && x < 11) && (y > 0 && y < 11)) {
+			let loc = x + "" + y;
+			addFieldToForbiden(loc);
+			removeFromAllowedFields(loc);
+		}
+	}
+	
+	console.log("Doddaie pól dla taken idąc do góry");
+
+	
+	for (i = 0, x = firstFieldInfo.x; i < size; i++, x--) {
+		let loc = x + "" + firstFieldInfo.y; 
+		console.log("Dodaję pole do odjętych: " + loc);
+		TAKEN_FIELDS.push(loc);
+		removeFromAllowedFields(loc)
+	}
+}
+
+function removeFieldsFromAllowedToRight(firstFieldInfo, size) {
+
+	console.log("Wyjmuję pola z allowed idąc w prawo.");
+	
+	let initX =  firstFieldInfo.x - 1;
+	let initY = firstFieldInfo.y - 1;
+	
+	console.log("Sprawdzenie 1 sekcji.");
+	
+	for (i = 0, x = initX; i < 3; i++, x++) {
+		if ((x > 0 && x < 11) && (initY > 0 && initY < 11)) {
+			let loc = x + "" + initY;
+			addFieldToForbiden(loc);
+			removeFromAllowedFields(loc)
+		}
+	}
+	
+	console.log("Sprawdzenie 2 sekcji.");
+	
+	for (i = 0, y = initY + 1; i < size; i++, y++) {
+		for (j = 0, x = initX; j < 2; j++, x += 2) {
+			if ((x > 0 && x < 11) && (y > 0 && y < 11)) {
+				let loc = x + "" + y;
+				addFieldToForbiden(loc);
+				removeFromAllowedFields(loc);
+			}
+		}
+	}
+	
+	console.log("Sprawdzenie 3 sekcji.");
+	
+	for (i = 0, y = firstFieldInfo.y + size, x = firstFieldInfo.x - 1; i < 3; i++, x++) {
+		if ((x > 0 && x < 11) && (y > 0 && y < 11)) {
+			let loc = x + "" + y;
+			addFieldToForbiden(loc);
+			removeFromAllowedFields(loc);
+		}
+	}
+	
+	console.log("Doddaie pól dla taken idąc do góry");
+
+	
+	for (i = 0, y = firstFieldInfo.y; i < size; i++, y++) {
+		let loc = firstFieldInfo.x + "" + y; 
+		console.log("Dodaję pole do odjętych: " + loc);
+		TAKEN_FIELDS.push(loc);
+		removeFromAllowedFields(loc);
+	}
+	
+}
+
+
+function addShipLocationsToLeft(fieldsLocationInfo, size) {
+	fieldsLocationInfo.y = fieldsLocationInfo.y - size + 1
+	addShipLocationsToRight(fieldsLocationInfo, size);
+}
+
+function addShipLocationsToDown(fieldsLocationInfo, size) {
+	fieldsLocationInfo.x = fieldsLocationInfo.x + size - 1;  
+	addShipLocationsToUp(fieldsLocationInfo, size);
+}
+
+function addShipLocationsToUp(fieldsLocationInfo, size) {
+	console.log("Dodaje statek dla pól wyszyukiwanych w górę.");
+	
+	ship = [];
+
+	for (i = 0, x = fieldsLocationInfo.x; i < size; i++, x--) {
+		let loc = x + "" + fieldsLocationInfo.y;
+		console.log("Dodaję statek o pozycji: " + loc);
+		ship.push(loc);
+	}
+	
+	SHIPS.push(ship);
+}
+
+function addShipLocationsToRight(fieldsLocationInfo, size) {
+	console.log("Dodaje statek dla pól wyszyukiwanych w prawo.");
+	
+	ship = [];
+
+	for (i = 0, y = fieldsLocationInfo.y; i < size; i++, y++) {
+		let loc = fieldsLocationInfo.x + "" + y;
+		console.log("Dodaję statek o pozycji: " + loc);
+		ship.push(loc);
+	}
+	
+	SHIPS.push(ship);
+}
+
+
+function addFieldToForbiden(loc) {
+	if (FORBIDDEN_FIELDS.indexOf(loc) == -1) {
+		console.log("Dodaję pole do odjętych: " + loc);
+		FORBIDDEN_FIELDS.push(loc);
+	}
+}
+
+function removeFromAllowedFields(loc) {
+	let index = ALLOWED_FIELDS.indexOf(loc);
+	ALLOWED_FIELDS.splice(index, 1);
+}
+
+function showShipsOnPanel() {
+	
+}
