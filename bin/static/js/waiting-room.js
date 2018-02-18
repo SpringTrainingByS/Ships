@@ -262,6 +262,9 @@ var SHIPS = [];
 
 async function randomShips() {
 	prepareFieldsInfo();
+	//addShipLocationsToDown({"x": 5, "y": 5}, 4)
+	
+	
 	findFieldsForAllShips();
 }
 
@@ -290,37 +293,50 @@ function findFieldsForAllShips() {
 		console.log("Losuję pozycję dla statku o rozmiarze: " + size);
 		findFieldsForShip(size); 
 	}
+	console.log("Statki: ");
+	console.log(SHIPS);
 }
 
 
 function findFieldsForShip(size) {
-
-	let firstFieldInfo = randomFirstField();
+	let isShipReady = false;
 	
-	if ( checkFieldsUp(firstFieldInfo, size) ) {
-		console.log("Statek o rozmiarze: " + size + " tworzy pola w górę");
-		removeFieldsFromAllowedToUp(firstFieldInfo, size);
-		addShipLocationsToUp(firstFieldInfo, size) 
-	}
-	else if ( checkFieldsRight(firstFieldInfo, size) ) {
-		console.log("Statek o rozmiarze: " + size + " tworzy pola w w prawo");
-		removeFieldsFromAllowedToRight(firstFieldInfo, size);
-		addShipLocationsToRight(firstFieldInfo, size); 
-	}
-	else if ( checkFieldsDown(firstFieldInfo, size) ) {
-		console.log("Statek o rozmiarze: " + size + " tworzy pola w dół");
-		removeFieldsFromAllowedToDown(firstFieldInfo, size);
-		addShipLocationsToDown(firstFieldInfo, size); 
-	}
-	else if ( checkFieldsLeft(firstFieldInfo, size) ) {
-		console.log("Statek o rozmiarze: " + size + " tworzy pola w lewo");
-		removeFieldsFromAllowedToLeft(firstFieldInfo, size);
-		addShipLocationsToLeft(firstFieldInfo, size); 
-	} 
+	while (!isShipReady) {
 	
-	console.log("Statki: ");
-	console.log(SHIPS);
-	
+		let firstFieldInfo = randomFirstField();
+		
+		console.log("Wylosowane pole: x:" + firstFieldInfo.x + ", y: " + firstFieldInfo.y);
+		
+		if ( checkFieldsUp(firstFieldInfo, size) ) {
+			console.log("Statek o rozmiarze: " + size + " tworzy pola w górę");
+			removeFieldsFromAllowedToUp(firstFieldInfo, size);
+			console.log("Pozycja inicjująca: x" + firstFieldInfo.x + ", y: " + firstFieldInfo.y); 
+			addShipLocationsToUp(firstFieldInfo, size) 
+			isShipReady = true;
+		}
+		else if ( checkFieldsRight(firstFieldInfo, size) ) {
+			console.log("Statek o rozmiarze: " + size + " tworzy pola w w prawo");
+			removeFieldsFromAllowedToRight(firstFieldInfo, size);
+			console.log("Pozycja inicjująca: x" + firstFieldInfo.x + ", y: " + firstFieldInfo.y);
+			addShipLocationsToRight(firstFieldInfo, size); 
+			isShipReady = true;
+		}
+		else if ( checkFieldsDown(firstFieldInfo, size) ) {
+			console.log("Statek o rozmiarze: " + size + " tworzy pola w dół");
+			removeFieldsFromAllowedToDown(firstFieldInfo, size);
+			console.log("Pozycja inicjująca: x" + firstFieldInfo.x + ", y: " + firstFieldInfo.y);
+			addShipLocationsToDown(firstFieldInfo, size); 
+			isShipReady = true;
+		}
+		else if ( checkFieldsLeft(firstFieldInfo, size) ) {
+			console.log("Statek o rozmiarze: " + size + " tworzy pola w lewo");
+			removeFieldsFromAllowedToLeft(firstFieldInfo, size);
+			console.log("Pozycja inicjująca: x" + firstFieldInfo.x + ", y: " + firstFieldInfo.y);
+			addShipLocationsToLeft(firstFieldInfo, size); 
+			isShipReady = true;
+		} 
+		
+	}
 }
 
 function randomFirstField() {
@@ -390,7 +406,7 @@ function checkFieldsUp(firstFieldInfo, size) {
 
 function checkFieldsRight(firstFieldInfo, size) {
 	
-	console.log("sprawdzanie dla pola pozycji w prawo " + firstFieldInfo.xy);
+	console.log("sprawdzanie dla wylosowanego pola pozycji w prawo " + firstFieldInfo.xy);
 	
 	let rightDirectionWright = true;
 	
@@ -494,13 +510,20 @@ function checkFieldsLeft(firstFieldInfo, size) {
 }
 
 function removeFieldsFromAllowedToDown(firstFieldInfo, size) {
-	firstFieldInfo.x = firstFieldInfo.x + size - 1;
-	removeFieldsFromAllowedToUp(firstFieldInfo, size);
+	//firstFieldInfo.x = firstFieldInfo.x + size - 1;
+	newFirstFieldInfo = {
+		"x": firstFieldInfo.x + size - 1,
+		"y": firstFieldInfo.y
+	};
+	removeFieldsFromAllowedToUp(newFirstFieldInfo, size);
 }
 
 function removeFieldsFromAllowedToLeft(firstFieldInfo, size) {
-	firstFieldInfo.y = firstFieldInfo.y - size + 1;
-	removeFieldsFromAllowedToRight(firstFieldInfo, size);
+	newFirstFieldInfo = {
+			"x": firstFieldInfo.x,
+			"y": firstFieldInfo.y - size + 1 
+		};
+	removeFieldsFromAllowedToRight(newFirstFieldInfo, size);
 }
 
 function removeFieldsFromAllowedToUp(firstFieldInfo, size) {
@@ -544,7 +567,6 @@ function removeFieldsFromAllowedToUp(firstFieldInfo, size) {
 	
 	console.log("Doddaie pól dla taken idąc do góry");
 
-	
 	for (i = 0, x = firstFieldInfo.x; i < size; i++, x--) {
 		let loc = x + "" + firstFieldInfo.y; 
 		console.log("Dodaję pole do odjętych: " + loc);
@@ -606,7 +628,7 @@ function removeFieldsFromAllowedToRight(firstFieldInfo, size) {
 
 
 function addShipLocationsToLeft(fieldsLocationInfo, size) {
-	fieldsLocationInfo.y = fieldsLocationInfo.y - size + 1
+	fieldsLocationInfo.y = fieldsLocationInfo.y - size + 1;
 	addShipLocationsToRight(fieldsLocationInfo, size);
 }
 
@@ -657,5 +679,11 @@ function removeFromAllowedFields(loc) {
 }
 
 function showShipsOnPanel() {
-	
+	for (ship of SHIPS) {
+		for (point of ship) {
+			console.log("Kolorowanie punktu: " + point + " o id: #own-pos" + point);
+			
+			$("#" + "own-pos" + point).get(0).style.backgroundColor = "green";
+		}
+	}
 }
